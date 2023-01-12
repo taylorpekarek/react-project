@@ -1,0 +1,56 @@
+.page {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.content {
+  display: flex;
+  justify-content: center;
+}
+    
+.ant-stat-table {
+    padding: 10px;
+    max-width: 90%;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+
+    th {
+      width: 25%;
+    }
+
+    tr:nth-child(even) {
+      background-color: #ffffff;
+    }
+
+    .ant {
+      
+      .name {
+        max-width: 25%;
+      }
+      
+      .length {
+        text-align: right;
+      }
+
+      .color {
+        text-align: right;
+      }
+
+      .weight {
+        text-align: right;
+      }
+    }
+}
+
+.race-button {
+  margin: 20px;
+  padding: 10px 20px;
+  background-color: #00cc00;
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  border: 2px solid #00cc00;
+  border-radius: 4px;
+  cursor: pointer;
+}
+     
+  
