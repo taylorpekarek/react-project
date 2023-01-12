@@ -54,7 +54,7 @@ class AntRace extends React.Component<{}, {data: AntStats[]}> {
 	render() {
     if (!this.state.data) {
       return (
-      <button className="race-button" onClick={this.loadAntData}>Load Ant Racers!</button>
+      <button className="race-button" onClick={this.loadData}>Load Ant Racers!</button>
       )
     }
     
@@ -69,21 +69,58 @@ class AntRace extends React.Component<{}, {data: AntStats[]}> {
 		);
 	}
 
-  loadAntData = () => {
-    const calculation = generateAntWinLikelihoodCalculator();
+  calcPromise = new Promise<number>((resolve, reject
+      ) => {
+        const calculation = generateAntWinLikelihoodCalculator();
+        calculation(c => {
+          if(c) {
+            resolve(c);
+          } else {
+            reject('No Number');
+          }
+        })
+      }
+    );
 
-    this.setState({
-      data: ants.map(ant => {
-        calculation(calc => {
-          ant.chance = calc * 100;
-        });
-        return ant;
-      })
+  loadData() {
+    const p = this.calcPromise;
+    p
+    .then(val => {
+      console.log(val);
+    })
+    .catch(err => {
+      console.log(err);
     });
+
+  
+  }
+
+  async loadAntData(): Promise<number> {
+    let c = 0;
+    const calculation = generateAntWinLikelihoodCalculator();
+    await calculation(calc => {
+      c = calc * 100;
+    });
+
+    return c;
+
+    // ants.forEach(ant => {
+    //   calculation(calc => {
+    //     ant.chance = calc * 100;
+    //   });
+    // });
   };
 
-  calc() {
-    return new Promise(generateAntWinLikelihoodCalculator());
+  setData() {
+    ants.forEach(ant => {
+      this.loadAntData().then(val => {
+        ant.chance = val;
+      });
+    });
+
+    this.setState({
+      data: ants
+    })
   }
 }
 
