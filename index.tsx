@@ -43,8 +43,21 @@ const ants: AntStats[] = [
   },
 ];
 
-class AntRace extends React.Component {
+class AntRace extends React.Component<{}, {data: AntStats[]}> {
+  constructor(props) {
+      super(props);
+      this.state = {
+          data: null
+      };
+  }
+
 	render() {
+    if (!this.state.data) {
+      return (
+      <button className="race-button" onClick={this.loadAntData}>Load Ant Racers!</button>
+      )
+    }
+    
 		return(
 			<div className="page">
 				<h1>DraftAnts</h1>
@@ -55,14 +68,29 @@ class AntRace extends React.Component {
 			</div>
 		);
 	}
+
+  loadAntData = () => {
+    const calculation = generateAntWinLikelihoodCalculator();
+
+    this.setState({
+      data: ants.map(ant => {
+        calculation(calc => {
+          ant.chance = calc * 100;
+        });
+        return ant;
+      })
+    });
+  };
+
+  calc() {
+    return new Promise(generateAntWinLikelihoodCalculator());
+  }
 }
 
 class DataTable extends React.Component {
  
 	render() {
-
     const AntDataRows = ants.map(ant => {
-
       return (
         <tr className="ant">
           <td className="name">{ant.name}</td>
@@ -90,17 +118,18 @@ class DataTable extends React.Component {
 			</div>
 		);
 	}
+}
 
-  generateAntWinLikelihoodCalculator() {
-    const delay = 7000 + Math.random() * 7000;
-    const likelihoodOfAntWinning = Math.random();
-  
-    return (callback) => {
-      setTimeout(() => {
-        callback(likelihoodOfAntWinning);
-      }, delay);
-    };
-  }
+function generateAntWinLikelihoodCalculator() {
+  const delay = 7000 + Math.random() * 7000;
+  const likelihoodOfAntWinning = Math.random();
+
+  return (callback) => {
+    setTimeout(() => {
+      callback(likelihoodOfAntWinning);
+      console.log('Calculated');
+    }, delay);
+  };
 }
 
 const rootElement = document.getElementById('root');
